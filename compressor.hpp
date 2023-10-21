@@ -12,11 +12,11 @@ void contarOcurrencias(string fName, HuffmanTable tabla[])
 {
 }
 
-void crearLista(List<HuffmanTreeInfo> lista, HuffmanTable tabla[])
+void crearLista(List<HuffmanTreeInfo> &lista, HuffmanTable tabla[])
 {
 }
 
-HuffmanTreeInfo *crearArbol(List<HuffmanTreeInfo> lista)
+HuffmanTreeInfo *crearArbol(List<HuffmanTreeInfo> &lista)
 {
 }
 
