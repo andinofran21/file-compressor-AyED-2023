@@ -47,4 +47,8 @@ void comprimir(string fName)
     grabarArchivoComprimido(fName, tabla);
 }
 
+void descomprimir(string fName)
+{
+}
+
 #endif
