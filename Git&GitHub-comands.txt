@@ -1,0 +1,97 @@
+*_CONFIGURACION DE GIT_*
+
+git config --global user.name 			→	usuario
+git config --global user.name	 		→ 	gmail
+git config --global core.editor "code --wait"	→ 	configura editor por defecto (wait=terminal espera hasta que cerremos nuestro editor de texto)
+git config --global -e 				→ 	abre el archivo de configuracion global dentro de VsCode
+git config --global core.autocrlf		→ 	globaliza los caracteres de salto de linea para Windows y/o MAC
+
+
+git config -h					→ 	listado de configuraciones
+
+
+
+
+*_COMANDOS DE GIT_*
+
+ls					→ 		listado de todas las carpetas que tengo
+pwd 					→		donde me encuentro
+cd [carpeta]				→		carpeta a la cual nos queremos mover 
+mkdir [nombre_carpeta]			→ 		crea directorio
+git rm -r [nombre]			→		elimina un directorio
+git init 				→ 		Initialized empty Git repository
+ls -a					→ 		muestra carpetas y archivos ocultos
+rm -rf .git				→		elimina un git init que creo por error 
+code . 					→		abre la carpeta en la cual yo me encuentro
+git tag [nombre]			→		le da una etiqueta a un commit, usado para puntos importantes (versiones)
+
+
++_Etapa de STAGE_+
+git status 				→		muestra el estado actual de nuestro repositorio
+git status -s
+git add [nombre]			→		selecciona un archivo 
+git add [nombre] [nombre] [nombre] ...
+git add [.extension]
+git add .				→		(mala practica) solo para codigo util
+git restore --staged [nombre]		→		elimina el archivo ed nuetra etapa de stage
+git restore [nombre]			→		recuperamos un archivo eliminado, incluso desde una etapa antres de hacer commit
+
++_COMMIT_+
+git commit -m "[mensaje]"		→		commit inicial con mensaje
+git commit		
+git rm [nombre]				→		eliminar el arcivho y hacer commit automaticamente
+
+git mv [origen] [destino] 		→		cambia el nombre del archivo origen por el nombre de destino 
+
+git stash				→		genera un "commit" de manera local que no afecta al arbol, sirve para cambiarnos de rama sin commitear cambios innecesarios
+git stash list				→		lista de stash
+git stash pop				→		recupera todo en el stash
+git stash drop				→		elimino lo que tengo en stash
+
+*IGNORAR ARCHIVOS*
+Creo un archivo ".gitignore" para agregar archivos o carpetas a ignorar simplemente con el nombre
+Obviamente subo los cambios del archivo .gitignore y relizo su respectivo commit "agregando archivo gitignore"
+
+git diff				→		muestra los cambios sobre las lineas 
+git diff --stage			→		muestra TODOS los cambios que se encuentren en la etapa de stage
+
+*HISTORIAL*
+git log					→		muestra Nombre de la persona, su correo, y un mensaje de commit con su id
+git log --oneline			→		muestra todos los commit con sus ids
+
+
+*RAMAS en Git o BRANCHES*
+git branch 				→		verifica en que rama nos encontramos
+
+git checkout [id]			→		nos movemos a un determinado commit segun el id asociado
+git chekout [nombre_archivo] 		→		nos movemos a la ultima modificacion del alchivo
+
+git reset [nombre_archivo] 		→		revertimos o deshacemos un commit modificando el historialde commits, borrando aquellos que se hayan hecho despues del que queramos llegar
+
+git checkout -b [nombre_rama]		→		creamos una rama
+git checkout [nombre_rama]		→		ingresamos a una rama
+git switch [nombre_rama]
+
+cat [nombre]				→		muestra el contenido de nuestro archivo
+git branch -d [nombre]			→		elimina una rama
+push -u origin [nombre]			→		crea una rama en el repositorio
+
+para traer un cambio de una rama bifurcada a la rama de main, debemos estar ubicados en la del main
+
+git merge [nombre de la rama]		→		trae el archivo con los cambios incluidos de la rama bifurcada
+git push  origin [nombre_Rama]		→		sube los cambios a la rama [nombre] del repositorio
+git pull  origin [nombre_Rama]		→		"actuliza" un archivo especifico 
+
+
+***<git alias> sirve para darle un alias a un comando, 
+por ejemplo: git config --global alias.algo "log --graph --decorate --all --oneline". 
+Ahora "git algo" despliega el log modificado***
+
+**<git reset --hard [id]> es un comando para volver a un commit en el tiempo y borrar los que le siguen
+en caso de equivocarnos existe el comando <git reflog> que nos muestra todos los commit incluso el ultimo
+en el que invocamos a git reset, solo bastara con volver a invocar <git reset --hard [id]> para deshacer ese lio.**
+
+**<git tag> aparte de darle una etiqueta a un commit, tambien sirve para usarlo de id para movernos con checkout
+si escribimos git tags nos mostrara el listado de tags**
+
+https://www.hostinger.co/tutoriales/comandos-de-git
