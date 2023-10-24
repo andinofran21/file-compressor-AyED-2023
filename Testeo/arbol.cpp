@@ -12,12 +12,6 @@
 #include <string.h>
 using namespace std;
 
-struct Caracter
-{
-    int c;
-    int cont;
-};
-
 int cmpOcurrencias(HuffmanTreeInfo c1, HuffmanTreeInfo c2)
 {
     // si la cantidad de ocurrencias es igual, ordeno alfabeticamente por codigo ASCII
@@ -40,18 +34,16 @@ int main()
     }
     cout << endl;
 
-
-
     // ---------------------------------------------------------------------------
     // PASO 2: Crear lista
     List<HuffmanTreeInfo> arbol = list<HuffmanTreeInfo>();
 
     // recorro la tabla y añado a la lista los caracteres que aparecieron
-    for (unsigned int i = 0; i < 256; i++)
+    for (int i = 0; i < 256; i++)
     {
         if (tabla[i].n > 0)
         {
-            HuffmanTreeInfo *car = huffmanTreeInfo(i,tabla[i].n,NULL,NULL);
+            HuffmanTreeInfo *car = huffmanTreeInfo(i, tabla[i].n, NULL, NULL);
             listAdd<HuffmanTreeInfo>(arbol, *car);
         }
     }
@@ -59,47 +51,40 @@ int main()
     // ordeno la lista
     listSort<HuffmanTreeInfo>(arbol, cmpOcurrencias);
 
-
-
     // ---------------------------------------------------------------------------
     // PASO 3: Crear arbol
 
     // Creamos los elementos h1 y h2 e inicializamos un contador en 0
     HuffmanTreeInfo h1;
     HuffmanTreeInfo h2;
-    HuffmanTreeInfo* root;
+    HuffmanTreeInfo *root;
     int i = 0;
 
     // Iteramos mientras haya mas de un elemento en la lista
-    while(listHasNext<HuffmanTreeInfo>(arbol)) // → error en la 3ra iteracion
+    while (listSize<HuffmanTreeInfo>(arbol) > 1) // → error en la 3ra iteracion
     {
         // removemos los primeros dos elementos de la lista
         h1 = listRemoveFirst<HuffmanTreeInfo>(arbol);
         h2 = listRemoveFirst<HuffmanTreeInfo>(arbol);
 
         // creamos un nuevo nodo con la sumatoria de las ocurrencias de h1 y h2
-        unsigned int nom = (unsigned int)255+i;
-        HuffmanTreeInfo *nodo = huffmanTreeInfo(nom,h1.n+h2.n,&h2,&h1);
+        long nom = 256 + i;
+        HuffmanTreeInfo *nodo = huffmanTreeInfo(nom, h1.n + h2.n, &h2, &h1);
 
         // insertamos el nodo en la lista para ir formando el arbol
         listOrderedInsert<HuffmanTreeInfo>(arbol, *nodo, cmpOcurrencias);
 
-        // aumentamos el contador y confirmamos que haya mas de un elemento en la lista
         i++;
-        listReset<HuffmanTreeInfo>(arbol);
-        listNext<HuffmanTreeInfo>(arbol);
     }
 
+    root = listNext<HuffmanTreeInfo>(arbol);
     /*HuffmanTreeInfo* h3 = huffmanTreeInfo(255+i,h1.n+h2.n,&h2,&h1);
     listAdd<HuffmanTreeInfo>(arbol,*h3);
     listReset<HuffmanTreeInfo>(arbol);
     root = listNext<HuffmanTreeInfo>(arbol);*/
 
-
-
     // ---------------------------------------------------------------------------
-    // Cargar codigo en la tabla 
-
+    // Cargar codigo en la tabla
 
     HuffmanTree ht = huffmanTree(root);
     string aux;
@@ -114,10 +99,10 @@ int main()
              << "[" << aux << "]" << endl;
     }
 
-    /* while(huffmanTreeHasNext(ht)) 
+    /* while(huffmanTreeHasNext(ht))
     {
         HuffmanTreeInfo* hoja = huffmanTreeNext(ht,aux);
-        tabla[hoja->c].cod=aux;    
+        tabla[hoja->c].cod=aux;
     }
 
     for(int i=0;i<256;i++) //mostrar tabla con la codificacion
@@ -131,15 +116,14 @@ int main()
     // ---------------------------------------------------------------------------
     // Grabar archivo comprimido
 
-
-    //listAdd<HuffmanTreeInfo>(arbol,*h3);
+    // listAdd<HuffmanTreeInfo>(arbol,*h3);
 
     // muestro la lista
     listReset<HuffmanTreeInfo>(arbol);
-    while(listHasNext<HuffmanTreeInfo>(arbol))
+    while (listHasNext<HuffmanTreeInfo>(arbol))
     {
         HuffmanTreeInfo *c = listNext<HuffmanTreeInfo>(arbol);
-        cout<<c->c<<"  "<<c->n<<endl;
+        cout << c->c << "  " << c->n << endl;
     }
 
     /* for(int i=0;i<256;i++)
