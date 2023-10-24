@@ -90,7 +90,7 @@ T listRemoveFirst(List<T> &lst)
 {
    T ret = removeFirst<T>(lst.head);
    lst.size--;
-   if (isEmpty(lst.head))
+   if (isEmpty<T>(lst.head))
    {
       lst.last = lst.head;
    }
