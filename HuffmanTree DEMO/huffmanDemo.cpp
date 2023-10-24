@@ -1,5 +1,5 @@
 #include <iostream>
-#include "biblioteca/tads/huffman/HuffmanSetup.hpp"
+#include "../biblioteca/tads/huffman/HuffmanSetup.hpp"
 // #include "biblioteca/tads/huffman/Progress.hpp"
 #include <string.h>
 using namespace std;
