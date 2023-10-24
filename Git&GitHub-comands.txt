@@ -74,7 +74,8 @@ git switch [nombre_rama]
 
 cat [nombre]				→		muestra el contenido de nuestro archivo
 git branch -d [nombre]			→		elimina una rama
-push -u origin [nombre]			→		crea una rama en el repositorio
+git push -u origin [nombre]		→		crea una rama en el repositorio
+git push origin :[nombre]		→		elimina la rama del repositorio (luego de hacer git branch -d)
 
 para traer un cambio de una rama bifurcada a la rama de main, debemos estar ubicados en la del main
 
