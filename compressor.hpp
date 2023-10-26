@@ -6,7 +6,7 @@
 #include "biblioteca/funciones/files.hpp"
 #include "biblioteca/tads/List.hpp"
 #include "biblioteca/tads/huffman/HuffmanSetup.hpp"
-#include "biblioteca/tads/huffman/Progress.hpp"
+//#include "biblioteca/tads/huffman/Progress.hpp"
 #include "biblioteca/funciones/strings.hpp"
 using namespace std;
 
@@ -18,8 +18,13 @@ int _cmpOcurrencias(HuffmanTreeInfo c1, HuffmanTreeInfo c2)
 
 void contarOcurrencias(string fName, HuffmanTable tabla[])
 {
-    tabla[256] = {0, ""};
-    FILE *f = fopen(fName.c_str(), "r+b");
+    //tabla[256] = {0, ""};
+    for(int i=0;i<256;i++)
+    {
+        tabla[i].n=0;
+        tabla[i].cod = "";
+    }
+    FILE *f = fopen("texto.txt", "r+b");
     
     // armamos la tabla con los caracteres y la cantidad de ocurrencias
     unsigned char c = read<unsigned char>(f);
@@ -62,7 +67,7 @@ HuffmanTreeInfo *crearArbol(List<HuffmanTreeInfo> &lista)
         h2 = listRemoveFirst<HuffmanTreeInfo>(lista);
 
         // creamos un nuevo nodo con la sumatoria de las ocurrencias de h1 y h2
-        long nom = 256 + i;
+        unsigned int nom = 256 + i;
         HuffmanTreeInfo *nodo = huffmanTreeInfo(nom, h1.n + h2.n, &h2, &h1);
 
         // insertamos el nodo en la lista para ir formando el arbol
@@ -76,6 +81,13 @@ HuffmanTreeInfo *crearArbol(List<HuffmanTreeInfo> &lista)
 
 void cargarCodigoEnTabla(HuffmanTreeInfo *raiz, HuffmanTable tabla[]) 
 {
+    HuffmanTree ht = huffmanTree(raiz);
+    string aux;
+    while(huffmanTreeHasNext(ht))
+    {
+        HuffmanTreeInfo* hoja = huffmanTreeNext(ht,aux);
+        tabla[hoja->c].cod=aux;
+    }
 }
 
 void grabarArchivoComprimido(string fName, HuffmanTable tabla[])
