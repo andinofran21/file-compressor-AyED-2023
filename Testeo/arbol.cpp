@@ -34,9 +34,7 @@ int main()
     // PASO 3: Crear arbol
     HuffmanTreeInfo *tree = crearArbol(lista);
   
-
     _mostrarArbol(tree);
-
 
     // Recorro el arbol para obtener los codigos y los cargo
     // en el array de contenedores, en el campo code
