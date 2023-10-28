@@ -40,6 +40,9 @@ int main()
     // Recorro el arbol para obtener los codigos y los cargo
     // en el array de contenedores, en el campo code
     cargarCodigoEnTabla(tree, tabla);
+
+    // Grabo el archivo comprimido
+    grabarArchivoComprimido(archivo,tabla);
     
     return 0;
 }
