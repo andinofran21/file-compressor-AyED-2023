@@ -3,36 +3,14 @@
 
 #include <iostream>
 #include <string.h>
-#include "biblioteca/funciones/files.hpp"
 #include "biblioteca/tads/List.hpp"
+#include "biblioteca/funciones/files.hpp"
+#include "biblioteca/funciones/strings.hpp"
+#include "biblioteca/tads/BitWriter.hpp"
 #include "biblioteca/tads/huffman/HuffmanSetup.hpp"
 // #include "biblioteca/tads/huffman/Progress.hpp"
-#include "biblioteca/funciones/strings.hpp"
 using namespace std;
 
-struct Hoja
-{
-    char c;
-    char length;
-    string code;
-};
-
-struct Cabecera
-{
-    char cantHojas;
-    List<Hoja> lH;
-    unsigned int longArchi;
-};
-
-Hoja hoja(char c, char lenght, string code)
-{
-    return {c, lenght, code};
-}
-
-Cabecera cabecera(char cantHojas, List<Hoja> lst, unsigned int longArchi)
-{
-    return {cantHojas, lst, longArchi};
-}
 
 int _cmpOcurrencias(HuffmanTreeInfo *c1, HuffmanTreeInfo *c2)
 {
@@ -40,6 +18,7 @@ int _cmpOcurrencias(HuffmanTreeInfo *c1, HuffmanTreeInfo *c2)
     return c1->n == c2->n ? c1->c - c2->c : c1->n - c2->n;
 }
 
+//Crea la tabla de ocurrencias, y guarda la cantidada de ocurrencias para cada caracter
 void contarOcurrencias(string fName, HuffmanTable tabla[])
 {
     // tabla[256] = {0, ""};
@@ -61,6 +40,7 @@ void contarOcurrencias(string fName, HuffmanTable tabla[])
     fclose(f);
 }
 
+// Recorro la tabla y añado a la lista los caracteres que aparecieron
 void crearLista(List<HuffmanTreeInfo *> &lista, HuffmanTable tabla[])
 {
     // recorro la tabla y añado a la lista los caracteres que aparecieron
@@ -76,6 +56,7 @@ void crearLista(List<HuffmanTreeInfo *> &lista, HuffmanTable tabla[])
     listSort<HuffmanTreeInfo *>(lista, _cmpOcurrencias);
 }
 
+//Recorre la lista mientras crear el arbol
 HuffmanTreeInfo *crearArbol(List<HuffmanTreeInfo *> &lista)
 {
     // Creamos los elementos h1 y h2 e inicializamos un contador en 0
@@ -103,6 +84,7 @@ HuffmanTreeInfo *crearArbol(List<HuffmanTreeInfo *> &lista)
     return *listNext<HuffmanTreeInfo *>(lista);
 }
 
+//Guardamos los codigosHuffman en una tabla
 void cargarCodigoEnTabla(HuffmanTreeInfo *raiz, HuffmanTable tabla[])
 {
     // creamos el arbol Huffman a partir de la raiz del arbol generado
@@ -116,10 +98,11 @@ void cargarCodigoEnTabla(HuffmanTreeInfo *raiz, HuffmanTable tabla[])
     }
 }
 
+// cuento la cantidad de hojas del arbol
 char contarHojas(HuffmanTable tabla[])
 {
     int cont=0;
-    for (int i = 0; i < 256; i++) // cuento la cantidad de hojas del arbol
+    for (int i = 0; i < 256; i++)
     {
         if (tabla[i].n != 0)
         {
@@ -131,54 +114,66 @@ char contarHojas(HuffmanTable tabla[])
     return ret;
 }
 
-List<Hoja> crearListaHojas(HuffmanTable tabla[])
+//Grabamos en un archivo el caracter,la longitud y su correspondiente cod. Huffman
+void grabarHojas(HuffmanTable tabla[], FILE* fHuf)
 {
-    List<Hoja> lH = list<Hoja>();
+    BitWriter bw = bitWriter(fHuf);
     for (int i = 0; i < 256; i++)
     {
         if (tabla[i].n != 0)
         {
-            int l = length(tabla[i].cod);
-            int mult = (l / 8);
-            string m = tabla[i].cod;
-            Hoja h = hoja(intToChar(i), intToChar(l), rpad(tabla[i].cod, 8 + 8 * mult, 0));
-            //rpad rellena con 0 a la derecha hasta obtener un largo de codigo que sea multiplo de 8
-            listAdd<Hoja>(lH, h);
+            char c = i;                     //caracter c
+            char l = length(tabla[i].cod);  //longitud del cod
+            string m = tabla[i].cod;        //codigo huffman (no completo con ceros)
+            
+            write<char>(fHuf,c);    // grabamos el caracter
+            write<char>(fHuf,l);    // grabamos la longitud
+            
+            //usamos bitWriterFlush para completar con ceros m y grabar en f
+            bitWriterWrite(bw,m);   
+            bitWriterFlush(bw);     // grabamos el codigo Huffman de c
         }
     }
 }
 
 //escribimos la cabecera que generamos en el archivo .huf
-void cargarCabecera(FILE *fHuf, Cabecera cab)
+void cargarCabecera(FILE *f, HuffmanTable tabla[],FILE *fHuf)
 {
+    //escribimos la cantidad de hojas del arbol
+    char cantHojas = contarHojas(tabla);
+    write<char>(fHuf,cantHojas); 
+
+    // escribimos los t registros con la informacion de las hojas
+    grabarHojas(tabla,fHuf);
+
+    // longitud del archivo
+    unsigned int longArch = fileSize<unsigned char>(f);
+    write<unsigned int>(fHuf,longArch); //escribimos la long del archivo original
 }
 
 void comprimirArchivo(FILE *f, FILE *fHuf, HuffmanTable tabla[])
 {
+    BitWriter bw = bitWriter(fHuf);
+    seek<char>(f,0); //nos posicionamos al principio del archivo original
+    while(!feof(f)) //reescribimos el archivo comprimiendo
+    {
+        char c = read<char>(f);
+        bitWriterWrite(bw,tabla[c].cod);
+    }
+    bitWriterFlush(bw); //si quedan elementos dentro de bw los termino de escribir
 }
 
 void grabarArchivoComprimido(string fName, HuffmanTable tabla[])
 {
-    // cantidad de hojas del arbol
-    char t = contarHojas(tabla);
-
+    // Abrimos el archivo original
     FILE *f = fopen(fName.c_str(), "r+b");
 
-    // longitud del archivo
-    unsigned int longArch = fileSize<unsigned char>(f);
+    // Creamos el archivo .huf
+    string fHufName = fName + ".huf";
+    FILE *fHuf = fopen(fHufName.c_str(), "w+b");
 
-    // Lista de hojas con los respectivos codigos
-    List<Hoja> lH = crearListaHojas(tabla);
-
-    // generar la cabecera del archivo
-    Cabecera cab = cabecera(t, lH, longArch);
-
-    // creamos el archivo .huf
-    string archivoHuf = fName + ".huf";
-    FILE *fHuf = fopen(archivoHuf.c_str(), "w+b");
-
-    // escribimos la cabecera en el archivo .huf
-    cargarCabecera(fHuf, cab);
+    // Grabamos la cabecera en el archivo .huf
+    cargarCabecera(f,tabla,fHuf);
 
     /*Recorrer byte por byte. Por cada byte que leemos accedemos a la tabla y copiamos dentro del archivo
     .huf el codigo comprimido correspondiente a ese byte.*/
