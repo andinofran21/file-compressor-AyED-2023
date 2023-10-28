@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include "biblioteca/funciones/strings.hpp"
-#include "compressor.hpp"
+#include "compressor2.hpp"
 #include "decompressor.hpp"
 using namespace std;
 
@@ -33,7 +33,7 @@ void comprimir(string fName)
     contarOcurrencias(fName, tabla);
 
     // paso 2
-    List<HuffmanTreeInfo> lista = list<HuffmanTreeInfo>();
+    List<HuffmanTreeInfo*> lista = list<HuffmanTreeInfo*>();
     crearLista(lista, tabla);
 
     // paso 3
@@ -49,6 +49,12 @@ void comprimir(string fName)
 
 void descomprimir(string fName)
 {
+    // Recomponemos el arbol huffman
+    HuffmanTreeInfo *raiz = recomponerArbol(fName);
+
+    // Grabo el archivo descomprimido
+    grabarArchivoDescomprimido(fName,raiz);
+
 }
 
 #endif
