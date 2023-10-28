@@ -3,11 +3,12 @@
 
 #include <iostream>
 #include <string.h>
-#include "biblioteca/funciones/files.hpp"
 #include "biblioteca/tads/List.hpp"
+#include "biblioteca/funciones/files.hpp"
+#include "biblioteca/funciones/strings.hpp"
+#include "biblioteca/tads/BitWriter.hpp"
 #include "biblioteca/tads/huffman/HuffmanSetup.hpp"
 // #include "biblioteca/tads/huffman/Progress.hpp"
-#include "biblioteca/funciones/strings.hpp"
 using namespace std;
 
 
