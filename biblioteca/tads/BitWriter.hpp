@@ -50,7 +50,7 @@ void bitWriterFlush(BitWriter& bw)
       unsigned char c=b;
       write<unsigned char>(bw.f,c);
    }
-   
+   bw.sBin="";
 }
 
 #endif
