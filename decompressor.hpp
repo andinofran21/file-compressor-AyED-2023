@@ -10,7 +10,7 @@
 #include "biblioteca/funciones/strings.hpp"
 using namespace std;
 
-void recomponerRama(BitReader br, HuffmanTreeInfo *raiz, int longCod, char caracter)
+void recomponerRama(BitReader br, HuffmanTreeInfo *raiz, int longCod, unsigned char caracter)
 {
     HuffmanTreeInfo *node = raiz;
     // iteramos hasta recomponer la rama correspondiente a esa hoja
@@ -55,18 +55,18 @@ HuffmanTreeInfo *recomponerArbol(string fName, int &posFile)
     HuffmanTreeInfo *raiz = huffmanTreeInfo(257, 0, NULL, NULL);
 
     // guardamos la cantidad de hojas que hay en el arbol huffman
-    int cantHojas = read<char>(f);
+    int cantHojas = read<unsigned char>(f)+1;
 
     // iteramos hasta obtener todas las hojas
     for (int i = 0; i < cantHojas; i++)
     {
         // guardamos el caracter de la hoja correspondiente
-        char caracter = read<char>(f);
-        int longCod = read<char>(f);
+        unsigned char caracter = read<unsigned char>(f);
+        int longCod = read<unsigned char>(f);
         recomponerRama(br, raiz, longCod, caracter);
     }
 
-    posFile = filePos<char>(f); //guardamos la posicion en el archivo despues de los t registros
+    posFile = filePos<unsigned char>(f); //guardamos la posicion en el archivo despues de los t registros
 
     fclose(f);
     return raiz;
@@ -76,10 +76,10 @@ void grabarArchivoDescomprimido(string fName, int posFile, HuffmanTreeInfo *raiz
 {
     // Abrimos el archivo original
     FILE *f = fopen(fName.c_str(), "r+b");
-    seek<char>(f,posFile); //nos posicionamos despues de los t registros
+    seek<unsigned char>(f,posFile); //nos posicionamos despues de los t registros
 
     // Creamos el archivo a descomprimir
-    string nomArch = substring(fName, 0, indexOf(fName, ".huf"))+"DESC";
+    string nomArch = "DESC"+substring(fName, 0, indexOf(fName, ".huf"));
     FILE *fDesc = fopen(nomArch.c_str(), "w+b");
 
     // longitud del archivo original en bytes
@@ -106,8 +106,8 @@ void grabarArchivoDescomprimido(string fName, int posFile, HuffmanTreeInfo *raiz
                 aux = aux->left;
             }
         }
-        char caracter = aux->c; //cuando llegamos a la hoja, leemos el caracter
-        write<char>(fDesc,caracter); //escribimos el caracter original en el archivo descomprimido
+        unsigned char caracter = aux->c; //cuando llegamos a la hoja, leemos el caracter
+        write<unsigned char>(fDesc,caracter); //escribimos el caracter original en el archivo descomprimido
         cont++;
     }
 
