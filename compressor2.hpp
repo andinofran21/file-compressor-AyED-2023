@@ -109,7 +109,7 @@ char contarHojas(HuffmanTable tabla[])
             cont++;
         }
     }
-    char ret = (char)cont;
+    unsigned char ret = cont-1;
 
     return ret;
 }
@@ -122,12 +122,12 @@ void grabarHojas(HuffmanTable tabla[], FILE* fHuf)
     {
         if (tabla[i].n != 0)
         {
-            char c = i;                     //caracter c
-            char l = length(tabla[i].cod);  //longitud del cod
+            unsigned char c = i;                     //caracter c
+            unsigned char l = length(tabla[i].cod);  //longitud del cod
             string m = tabla[i].cod;        //codigo huffman (no completo con ceros)
             
-            write<char>(fHuf,c);    // grabamos el caracter
-            write<char>(fHuf,l);    // grabamos la longitud
+            write<unsigned char>(fHuf,c);    // grabamos el caracter
+            write<unsigned char>(fHuf,l);    // grabamos la longitud
             
             //usamos bitWriterFlush para completar con ceros m y grabar en f
             bitWriterWrite(bw,m);   
@@ -140,8 +140,8 @@ void grabarHojas(HuffmanTable tabla[], FILE* fHuf)
 void cargarCabecera(FILE *f, HuffmanTable tabla[],FILE *fHuf)
 {
     //escribimos la cantidad de hojas del arbol
-    char cantHojas = contarHojas(tabla);
-    write<char>(fHuf,cantHojas); 
+    unsigned char cantHojas = contarHojas(tabla);
+    write<unsigned char>(fHuf,cantHojas); 
 
     // escribimos los t registros con la informacion de las hojas
     grabarHojas(tabla,fHuf);
@@ -154,10 +154,10 @@ void cargarCabecera(FILE *f, HuffmanTable tabla[],FILE *fHuf)
 void comprimirArchivo(FILE *f, FILE *fHuf, HuffmanTable tabla[])
 {
     BitWriter bw = bitWriter(fHuf);
-    seek<char>(f,0); //nos posicionamos al principio del archivo original
+    seek<unsigned char>(f,0); //nos posicionamos al principio del archivo original
     while(!feof(f)) //reescribimos el archivo comprimiendo
     {
-        char c = read<char>(f);
+        unsigned char c = read<unsigned char>(f);
         bitWriterWrite(bw,tabla[c].cod);
     }
     bitWriterFlush(bw); //si quedan elementos dentro de bw los termino de escribir
