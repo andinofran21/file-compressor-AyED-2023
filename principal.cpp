@@ -49,11 +49,12 @@ void comprimir(string fName)
 
 void descomprimir(string fName)
 {
+    int filePos;
     // Recomponemos el arbol huffman
-    HuffmanTreeInfo *raiz = recomponerArbol(fName);
+    HuffmanTreeInfo *raiz = recomponerArbol(fName, filePos);
 
     // Grabo el archivo descomprimido
-    grabarArchivoDescomprimido(fName,raiz);
+    grabarArchivoDescomprimido(fName,filePos,raiz);
 
 }
 
