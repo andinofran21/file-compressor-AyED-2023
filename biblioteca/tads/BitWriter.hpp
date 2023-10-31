@@ -44,7 +44,7 @@ void bitWriterFlush(BitWriter& bw)
       bwLength++;
    }
    //bw.sBin=rpad(bw.sBin,8,'0');
-   for(int i=0;i<bwLength;i+=8)
+   for(unsigned int i=0;i<bwLength;i+=8)
    {
       unsigned int b=stringToInt(substring(bw.sBin,i,i+8),2);
       unsigned char c=b;
