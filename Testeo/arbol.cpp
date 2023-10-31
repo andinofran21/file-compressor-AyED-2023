@@ -18,6 +18,7 @@ using namespace std;
 
 int main()
 {
+    // ---------------------------COMPRESOR-----------------------------------
     // PASO 1: Contar ocurrencias
     // armamos la tabla con los caracteres y la cantidad de ocurrencias
     HuffmanTable tabla[256];
@@ -43,6 +44,20 @@ int main()
 
     // Grabo el archivo comprimido
     grabarArchivoComprimido(archivo,tabla);
+
+
+
     
+
+    // ---------------------------DESCOMPRESOR-----------------------------------
+    
+    archivo = "texto.txt.huf";
+    int filePos;
+    // Recomponemos el arbol huffman
+    HuffmanTreeInfo *raiz = recomponerArbol(archivo, filePos);
+
+    // Grabo el archivo descomprimido
+    grabarArchivoDescomprimido(archivo,filePos,raiz);
+
     return 0;
 }
