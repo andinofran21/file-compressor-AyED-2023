@@ -10,9 +10,12 @@ using namespace std;
 void comprimir(string fName);
 void descomprimir(string fName);
 
-int main(int arg, char **argv)
+// int arg, char **argv
+
+int main()
 {
-    string fName = argv[1];
+    // string fName = argv[1];
+    string fName = "zoom.bmp";
 
     if (!endsWith(fName, ".huf"))
     {
