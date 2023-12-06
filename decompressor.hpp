@@ -6,8 +6,8 @@
 #include "biblioteca/tads/BitReader.hpp"
 #include "biblioteca/funciones/files.hpp"
 #include "biblioteca/tads/huffman/HuffmanSetup.hpp"
-// #include "biblioteca/tads/huffman/Progress.hpp"
 #include "biblioteca/funciones/strings.hpp"
+#include "Progress.hpp"
 using namespace std;
 
 void _recomponerRama(BitReader br, HuffmanTreeInfo *raiz, int longCod, unsigned char caracter)
@@ -86,6 +86,9 @@ void grabarArchivoDescomprimido(string fName, int posFile, HuffmanTreeInfo *raiz
 
     // Longitud del archivo original en bytes
     unsigned int longArchi = read<unsigned int>(f);
+
+    // inicilizo el proceso de compresion con el tamaño del archivo a descomprimir
+    Progress p = progress(longArchi);
     
     // Reconstruimos el archivo original
     BitReader br = bitReader(f);
@@ -109,10 +112,15 @@ void grabarArchivoDescomprimido(string fName, int posFile, HuffmanTreeInfo *raiz
                 aux = aux->left;
             }
         }
+        // Actualizar el progreso basado en la cantidad de bytes leídos
+        progressShow(p);
+
         unsigned char caracter = aux->c; //cuando llegamos a la hoja, leemos el caracter
         write<unsigned char>(fDesc,caracter); //escribimos el caracter original en el archivo descomprimido
         cont++;
     }
+
+    progressShowDuration(p);
 
     fclose(fDesc);
     fclose(f);
