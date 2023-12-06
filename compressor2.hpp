@@ -6,7 +6,7 @@
 #include "biblioteca/tads/List.hpp"
 #include "biblioteca/funciones/files.hpp"
 #include "biblioteca/funciones/strings.hpp"
-#include "biblioteca/tads/BitWriter.hpp"
+#include "biblioteca/tads/BitWriter2.hpp"
 #include "biblioteca/tads/huffman/HuffmanSetup.hpp"
 // #include "biblioteca/tads/huffman/Progress.hpp"
 using namespace std;
@@ -21,7 +21,7 @@ int _cmpOcurrencias(HuffmanTreeInfo *c1, HuffmanTreeInfo *c2)
 //Crea la tabla de ocurrencias, y guarda la cantidada de ocurrencias para cada caracter
 void contarOcurrencias(string fName, HuffmanTable tabla[])
 {
-    // tabla[256] = {0, ""};
+    // inicializamos la tabla
     for (int i = 0; i < 256; i++)
     {
         tabla[i].n = 0;
@@ -104,7 +104,7 @@ char contarHojas(HuffmanTable tabla[])
     int cont=0;
     for (int i = 0; i < 256; i++)
     {
-        if (tabla[i].n != 0)
+        if (tabla[i].n != 0) //si el caracter aparece, incremento el contador
         {
             cont++;
         }

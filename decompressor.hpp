@@ -10,13 +10,15 @@
 #include "biblioteca/funciones/strings.hpp"
 using namespace std;
 
-void recomponerRama(BitReader br, HuffmanTreeInfo *raiz, int longCod, unsigned char caracter)
+void _recomponerRama(BitReader br, HuffmanTreeInfo *raiz, int longCod, unsigned char caracter)
 {
+    // Creamos el nodo auxiliar
     HuffmanTreeInfo *node = raiz;
+
     // iteramos hasta recomponer la rama correspondiente a esa hoja
     for (int j = 0; j < longCod; j++)
     {
-
+        // leo un bit
         int bit = bitReaderRead(br);
         // si es un 1 voy a derecha
         if (bit == 1)
@@ -32,7 +34,7 @@ void recomponerRama(BitReader br, HuffmanTreeInfo *raiz, int longCod, unsigned c
         // si es un 0 voy a izquierda
         else
         {
-            // si no existe el nodo siguiente de la izquierda, lo cre
+            // si no existe el nodo siguiente de la izquierda, lo creo
             if (node->left == NULL)
             {
                 node->left = huffmanTreeInfo(257, 0, NULL, NULL);
@@ -63,7 +65,7 @@ HuffmanTreeInfo *recomponerArbol(string fName, int &posFile)
         // guardamos el caracter de la hoja correspondiente
         unsigned char caracter = read<unsigned char>(f);
         int longCod = read<unsigned char>(f);
-        recomponerRama(br, raiz, longCod, caracter);
+        _recomponerRama(br, raiz, longCod, caracter);
     }
 
     posFile = filePos<unsigned char>(f); //guardamos la posicion en el archivo despues de los t registros
@@ -82,9 +84,10 @@ void grabarArchivoDescomprimido(string fName, int posFile, HuffmanTreeInfo *raiz
     string nomArch = "DESC"+substring(fName, 0, indexOf(fName, ".huf"));
     FILE *fDesc = fopen(nomArch.c_str(), "w+b");
 
-    // longitud del archivo original en bytes
+    // Longitud del archivo original en bytes
     unsigned int longArchi = read<unsigned int>(f);
     
+    // Reconstruimos el archivo original
     BitReader br = bitReader(f);
     int cont=0;
     while (!feof(f) && cont<longArchi)
