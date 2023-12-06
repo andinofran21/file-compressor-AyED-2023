@@ -1,10 +1,10 @@
 *_CONFIGURACION DE GIT_*
 
-git config --global user.name 			→	usuario
-git config --global user.name	 		→ 	gmail
+git config --global user.name [nombre]		→	usuario
+git config --global user.email [nombre]	 	→ 	gmail
 git config --global core.editor "code --wait"	→ 	configura editor por defecto (wait=terminal espera hasta que cerremos nuestro editor de texto)
 git config --global -e 				→ 	abre el archivo de configuracion global dentro de VsCode
-git config --global core.autocrlf		→ 	globaliza los caracteres de salto de linea para Windows y/o MAC
+git config --global core.autocrlf input		→ 	globaliza los caracteres de salto de linea para Windows y/o MAC
 
 
 git config -h					→ 	listado de configuraciones
